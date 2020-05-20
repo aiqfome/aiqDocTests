@@ -5,6 +5,8 @@ from cerberus import Validator
 import requests
 from http import HTTPStatus
 from unittest import TestCase
+from shutil import copyfile
+
 
 AIQDOCTESTS_DATA_FOLDER = "AIQDOCTESTS_DATA_FOLDER"
 AIQDOCTESTS_CMD_TEARDOWN = "AIQDOCTESTS_CMD_TEARDOWN"
@@ -186,6 +188,13 @@ class Config:
     def runTestsDocker(self, wait=False):
         cmd = "sh -c "
         if wait:
+            copyfile(
+                os.path.join(
+                    os.path.dirname(sys.modules["aiqdoctests"].__file__), "wait"
+                ),
+                os.path.join(os.getcwd(), "/wait"),
+            )
+            os.system("chmod +x /wait")
             cmd += "'/wait' && "
         if self.__dict__.get("tests_before_cmd", None):
             cmd += "%s && " % self.tests_before_cmd
