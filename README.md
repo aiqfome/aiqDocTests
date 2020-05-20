@@ -2,7 +2,20 @@
   aiqDocTests
 </h2>
 
-A framework to validate request/response's json and create documentation
+<p align="">AiqDocTests A framework to validate request/response's json and create documentation for applications maintained by the devs of the <a href="https://aiqfome.com/">most greedy-gut app on the internet</a>!</p>
+<p>For those who would like to contribute, learn more <a href="#-contributing">visit</a>.</p>
+
+<p align="center">
+  <a href="https://github.com/aiqfome" style="text-decoration:none" target="_blank">
+    <img alt="Made by AiqFome" src="https://img.shields.io/badge/made%20by-aiqfome-blueviolet">
+  </a>
+
+  <img alt="Last Commit" src="https://img.shields.io/github/last-commit/aiqfome/aiqDocTests">
+
+  <img alt="Contributors" src="https://img.shields.io/github/contributors/aiqfome/aiqDocTests">
+
+  <img alt="License" src="https://img.shields.io/github/license/aiqfome/aiqDocTests">
+</p>
 
 
 ## 🤔 Contributing
@@ -40,7 +53,7 @@ After your Pull Request is merged, can you delete your feature branch.
 ## 📝 License
 
 <a href="LICENSE" style="text-decoration: none">
-  <img alt="License" src="https://img.shields.io/github/license/aiqfome/aiqChart">
+  <img alt="License" src="https://img.shields.io/github/license/aiqfome/aiqDocTests">
 </a>
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
