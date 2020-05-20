@@ -1,0 +1,85 @@
+#!/usr/bin/python3
+import argparse
+import os
+import sys
+import json
+
+from aiqdoctests.structures import StructureIO
+from aiqdoctests.structures import Config
+
+
+parser = argparse.ArgumentParser(
+    description="AIQDOCTEST - Program for testing and documentation for REST API's"
+)
+parser.add_argument(
+    "-t",
+    "--runTests",
+    help="Run tests with dockerfile in folder tests",
+    action="store_true",
+    dest="tests",
+)
+parser.add_argument(
+    "-g",
+    "--generateDoc",
+    help="Generate file swagger.json",
+    action="store_true",
+    dest="generateDoc",
+)
+parser.add_argument(
+    "-s", "--docs", help="Up server docs", dest="swagger", action="store_true",
+)
+
+parser.add_argument(
+    "-w",
+    "--wait",
+    help="Wait for all services up before start tests \n For more information https://github.com/ufoscout/docker-compose-wait/",
+    dest="wait",
+    action="store_true",
+)
+
+parser.add_argument(
+    "--init", help="Init the project", dest="init", action="store_true",
+)
+
+args = parser.parse_args()
+
+
+if args.init:
+    from shutil import copyfile
+
+    d = os.path.dirname(sys.modules["aiqdoctests"].__file__)
+    copyfile(
+        os.path.join(d, ".aiqdoctests.config"),
+        os.path.join(os.getcwd(), ".aiqdoctests.config"),
+    )
+
+try:
+    config = Config()
+except:
+    print("Not exists .aiqdoctests.config.\nExecute 'aiqdocstests --init' to start")
+    os._exit(1)
+
+if args.tests:
+    ret = config.runTestsDocker(args.wait)
+    if ret == 0:
+        if args.generateDoc:
+            config.generateSwagger()
+        os._exit(0)
+    os._exit(1)
+else:
+    if args.generateDoc:
+        config.generateSwagger()
+
+    if args.swagger:
+        from flask import Flask
+
+        APP = Flask(__name__)
+        from flask_swagger_ui import get_swaggerui_blueprint
+
+        SWAGGER_URL = config.docs_url
+        API_URL = "/" + config.path_swagger_file()
+        SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+            SWAGGER_URL, API_URL, config={"app_name": "Created by AiqDocTests"}
+        )
+        APP.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
+        APP.run(host="0.0.0.0", debug=True)
