@@ -152,11 +152,8 @@ class StructureIO:
             raise Exception("Error in file %s\n%s" % (file, ex))
 
     def loadJsonScructure(self, json_scructure):
-        script_dir = os.path.dirname(__file__)
-        rel_path = "../../%s/%s.json" % (
-            os.getenv(AIQDOCTESTS_DATA_FOLDER),
-            json_scructure,
-        )
+        script_dir = os.getcwd()
+        rel_path = "%s/%s.json" % (os.getenv(AIQDOCTESTS_DATA_FOLDER), json_scructure,)
         json_scructure_path = os.path.join(script_dir, rel_path)
 
         with open(json_scructure_path, "r") as file:
