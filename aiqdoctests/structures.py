@@ -307,7 +307,6 @@ class AiqTest(TestCase):
         )
 
     def clearTest(self):
-        self.redis.flushdb()
         os.system(os.getenv(AIQDOCTESTS_CMD_TEARDOWN))
 
     def tearDown(self):
