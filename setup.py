@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="aiqdoctests",
+    name="aiqDocTests",
     version="1.0.1",
     author="An Awesome Coder",
     author_email="dev@aiqfome.com",
