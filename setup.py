@@ -1,18 +1,30 @@
 #!/usr/bin/python3
 from setuptools import setup
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name="aiqdoctests",
-    version="1.0.0",
+    version="1.0.1",
     author="An Awesome Coder",
     author_email="dev@aiqfome.com",
     scripts=["scripts/aiqdoctests"],
     packages=["aiqdoctests"],
     url="https://github.com/aiqfome/aiqDocTests",
-    license="LICENSE",
-    description="A framework to validate request/response's json and create documentation",
+    license="Apache License 2.0",
+    description="A framework to validate request/response's json and create documentation for REST API",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     install_requires=["cerberus", "requests"],
     package_data={"aiqdoctests": [".aiqdoctests.config", "wait"]},
     include_package_data=True,
     zip_safe=False,
+    classifiers=[
+        "License :: OSI Approved :: Apache Software License",
+        "Programming Language :: Python :: 3",
+        "Operating System :: OS Independent",
+        "Topic :: Software Development :: Testing",
+        "Topic :: Text Editors :: Documentation",
+    ],
 )
