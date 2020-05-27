@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="aiqDocTests",
-    version="1.1.0",
+    version="1.1.1",
     author="An Awesome Coder",
     author_email="dev@aiqfome.com",
     scripts=["scripts/aiqdoctests"],
@@ -16,7 +16,7 @@ setup(
     description="A framework to validate request/response's json and create documentation for REST API",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    install_requires=["cerberus", "requests"],
+    install_requires=["cerberus", "requests", "flask_swagger_ui"],
     package_data={"aiqdoctests": [".aiqdoctests.config", "wait"]},
     include_package_data=True,
     zip_safe=False,
