@@ -7,7 +7,9 @@ import requests
 from http import HTTPStatus
 from unittest import TestCase
 from shutil import copyfile
+import unittest
 
+unittest.util._MAX_LENGTH = 2000
 
 AIQDOCTESTS_DATA_FOLDER = "AIQDOCTESTS_DATA_FOLDER"
 AIQDOCTESTS_CMD_TEARDOWN = "AIQDOCTESTS_CMD_TEARDOWN"
@@ -197,8 +199,7 @@ class Config:
         if self.__dict__.get("tests_before_cmd", None):
             cmd += "%s && " % self.tests_before_cmd
         return os.system(
-            "%s python3 -m unittest discover -v -s %s && exit 0 || exit 1"
-            % (cmd, self.tests_folder)
+            "%s python3 -m unittest discover -v -s %s" % (cmd, self.tests_folder)
         )
 
     def path_swagger_file(self):
@@ -287,7 +288,11 @@ class AiqTest(TestCase):
                 % (http_verb, http_code, self.structure.name_file, ex)
             )
 
-        j = r.json()
+        try:
+            j = r.json()
+        except:
+            return r
+
         if (responseValidator.schema and not responseValidator.validate(j)) or (
             contentValidator.schema and not contentValidator.validate(payload)
         ):
