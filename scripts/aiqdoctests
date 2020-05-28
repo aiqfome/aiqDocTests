@@ -59,6 +59,9 @@ except:
     print("Not exists .aiqdoctests.config.\nExecute 'aiqdocstests --init' to start")
     os._exit(1)
 
+if args.init:
+    config.generateSwagger()
+
 if args.tests:
     ret = config.runTestsDocker(args.wait)
     if ret == 0:
