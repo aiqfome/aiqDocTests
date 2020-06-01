@@ -225,6 +225,8 @@ class Config:
         return s.getSwaggerJson()
 
     def generateSwagger(self):
+        if not os.path.exists(self.data_structures_folder):
+            os.mkdir(self.data_structures_folder)
         json_files = [
             pos_json.replace(".json", "")
             for pos_json in os.listdir(self.data_structures_folder)
