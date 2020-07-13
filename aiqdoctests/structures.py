@@ -284,7 +284,7 @@ class AiqTest(TestCase):
                 headers=headers,
                 data=payload,
                 params=query_params,
-                files=files
+                files=files,
             )
         else:
             r = getattr(requests, http_verb)(
@@ -293,8 +293,10 @@ class AiqTest(TestCase):
                 json=payload,
                 params=query_params,
             )
-
-        self.assertEqual(http_code, r.status_code)
+        try:
+            self.assertEqual(http_code, r.status_code)
+        except Exception as ex:
+            self.fail("Error: %s\n Message: %s" % (ex, r.text))
         responseValidator = Validator()
         try:
             responseValidator.schema = self.structure.getResponseValidator(
@@ -320,7 +322,15 @@ class AiqTest(TestCase):
             )
         return r
 
-    def assertOK(self, method=None, headers=None, payload=None, parameters_url={}, query_params={}, files=None):
+    def assertOK(
+        self,
+        method=None,
+        headers=None,
+        payload=None,
+        parameters_url={},
+        query_params={},
+        files=None,
+    ):
         return self.assertResponseStructure(
             HTTPStatus.OK.value,
             method=method,
@@ -328,7 +338,7 @@ class AiqTest(TestCase):
             payload=payload,
             parameters_url=parameters_url,
             query_params=query_params,
-            files=files
+            files=files,
         )
 
     def clearTest(self):
