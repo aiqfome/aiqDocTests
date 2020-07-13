@@ -299,10 +299,6 @@ class AiqTest(TestCase):
             parameters_url=parameters_url,
             query_params=query_params,
             files=None
-            query_params=query_params,
-            files=None
-            query_params=query_params,
-            files=None
         )
 
     def clearTest(self):
