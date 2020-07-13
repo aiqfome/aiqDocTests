@@ -1,3 +1,4 @@
 aiqDocTests.egg-info/*
+.vscode/
 build/*
 dist/*
