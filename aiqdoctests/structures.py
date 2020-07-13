@@ -263,6 +263,8 @@ class AiqTest(TestCase):
         payload={},
         content="application/json",
         parameters_url={},
+        query_params={},
+        files=None,
     ):
 
         contentValidator = Validator()
@@ -274,9 +276,23 @@ class AiqTest(TestCase):
                 % (content, self.structure.name_file, ex)
             )
         http_verb = self.http_verb(method)
-        r = getattr(requests, http_verb)(
-            url=self.url(parameters_url), headers=headers, json=payload
-        )
+
+        if files != None:
+            r = getattr(requests, http_verb)(
+                url=self.url(parameters_url),
+                headers=headers,
+                data=payload,
+                params=query_params,
+                files=files
+            )
+        else:
+            r = getattr(requests, http_verb)(
+                url=self.url(parameters_url),
+                headers=headers,
+                json=payload,
+                params=query_params,
+            )
+
         self.assertEqual(http_code, r.status_code)
         responseValidator = Validator()
         try:
@@ -299,13 +315,15 @@ class AiqTest(TestCase):
             )
         return r
 
-    def assertOK(self, method=None, headers=None, payload=None, parameters_url={}):
+    def assertOK(self, method=None, headers=None, payload=None, parameters_url={}, query_params={}, files=None):
         return self.assertResponseStructure(
             HTTPStatus.OK.value,
             method=method,
             headers=headers,
             payload=payload,
             parameters_url=parameters_url,
+            query_params=query_params,
+            files=files
         )
 
     def clearTest(self):

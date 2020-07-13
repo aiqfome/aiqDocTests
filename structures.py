@@ -12,7 +12,7 @@ AIQDOCTESTS_CMD_TEARDOWN = "AIQDOCTESTS_CMD_TEARDOWN"
 
 class StructureIO:
     def __init__(self, file):
-        self.importScructure(file)
+        self.importStructure(file)
 
     def getResponseValidator(self, http_verb, code):
         response = self.responses[http_verb.lower()][str(code)]
@@ -138,28 +138,28 @@ class StructureIO:
             % (http_verb, self.responses)
         )
 
-    def importScructure(self, file):
+    def importStructure(self, file):
 
         if not file:
             raise Exception("File is Null, impossible import")
         try:
-            self.__dict__ = self.loadJsonScructure(file)
+            self.__dict__ = self.loadJsonStructure(file)
             self.name_file = file
         except Exception as ex:
             raise Exception("Error in file %s\n%s" % (file, ex))
 
-    def loadJsonScructure(self, json_scructure):
+    def loadJsonStructure(self, json_structure):
         script_dir = os.path.dirname(__file__)
         rel_path = "../../%s/%s.json" % (
             os.getenv(AIQDOCTESTS_DATA_FOLDER),
-            json_scructure,
+            json_structure,
         )
-        json_scructure_path = os.path.join(script_dir, rel_path)
+        json_structure_path = os.path.join(script_dir, rel_path)
 
-        with open(json_scructure_path, "r") as file:
-            json_scructure = file.read()
+        with open(json_structure_path, "r") as file:
+            json_structure = file.read()
 
-        return json.loads(json_scructure)
+        return json.loads(json_structure)
 
 
 class Config:
@@ -173,15 +173,15 @@ class Config:
         if not file:
             raise Exception("File is Null, impossible import")
         try:
-            self.__dict__ = self.loadJsonScructure(file)
+            self.__dict__ = self.loadJsonStructure(file)
         except:
             raise Exception("Error in file %s" % file)
 
-    def loadJsonScructure(self, json_scructure):
-        with open(json_scructure, "r") as file:
-            json_scructure = file.read()
+    def loadJsonStructure(self, json_structure):
+        with open(json_structure, "r") as file:
+            json_structure = file.read()
 
-        return json.loads(json_scructure)
+        return json.loads(json_structure)
 
     def runTestsDocker(self, wait=False):
         cmd = "sh -c "
@@ -206,14 +206,14 @@ class Config:
 
         return self.path_swagger_file()
 
-    def returnJson(self, json_scructure_path):
-        with open(json_scructure_path, "r") as file:
-            json_scructure = file.read()
+    def returnJson(self, json_structure_path):
+        with open(json_structure_path, "r") as file:
+            json_structure = file.read()
 
-        return json.loads(json_scructure)
+        return json.loads(json_structure)
 
-    def jsonFromStructure(self, json_scructure_path):
-        s = StructureIO(json_scructure_path)
+    def jsonFromStructure(self, json_structure_path):
+        s = StructureIO(json_structure_path)
         return s.getSwaggerJson()
 
     def generateSwagger(self):
@@ -290,13 +290,15 @@ class AiqTest(TestCase):
             )
         return r
 
-    def assertOK(self, method=None, headers=None, payload=None, parameters_url={}):
+    def assertOK(self, method=None, headers=None, payload=None, parameters_url={}, query_params={}):
         return self.assertResponseStructure(
             HTTPStatus.OK.value,
             method=method,
             headers=headers,
             payload=payload,
             parameters_url=parameters_url,
+            query_params=query_params,
+            files=None
         )
 
     def clearTest(self):
