@@ -1,10 +1,15 @@
 import os
 import json
+import sys
 
 from cerberus import Validator
 import requests
 from http import HTTPStatus
 from unittest import TestCase
+from shutil import copyfile
+import unittest
+
+unittest.util._MAX_LENGTH = 2000
 
 AIQDOCTESTS_DATA_FOLDER = "AIQDOCTESTS_DATA_FOLDER"
 AIQDOCTESTS_CMD_TEARDOWN = "AIQDOCTESTS_CMD_TEARDOWN"
@@ -149,11 +154,8 @@ class StructureIO:
             raise Exception("Error in file %s\n%s" % (file, ex))
 
     def loadJsonScructure(self, json_scructure):
-        script_dir = os.path.dirname(__file__)
-        rel_path = "../../%s/%s.json" % (
-            os.getenv(AIQDOCTESTS_DATA_FOLDER),
-            json_scructure,
-        )
+        script_dir = os.getcwd()
+        rel_path = "%s/%s.json" % (os.getenv(AIQDOCTESTS_DATA_FOLDER), json_scructure,)
         json_scructure_path = os.path.join(script_dir, rel_path)
 
         with open(json_scructure_path, "r") as file:
@@ -186,12 +188,18 @@ class Config:
     def runTestsDocker(self, wait=False):
         cmd = "sh -c "
         if wait:
+            copyfile(
+                os.path.join(
+                    os.path.dirname(sys.modules["aiqdoctests"].__file__), "wait"
+                ),
+                os.path.join(os.getcwd(), "/wait"),
+            )
+            os.system("chmod +x /wait")
             cmd += "'/wait' && "
         if self.__dict__.get("tests_before_cmd", None):
             cmd += "%s && " % self.tests_before_cmd
         return os.system(
-            "%s python3 -m unittest discover -v -s %s && exit 0 || exit 1"
-            % (cmd, self.tests_folder)
+            "%s python3 -m unittest discover -v -s %s" % (cmd, self.tests_folder)
         )
 
     def path_swagger_file(self):
@@ -217,6 +225,8 @@ class Config:
         return s.getSwaggerJson()
 
     def generateSwagger(self):
+        if not os.path.exists(self.data_structures_folder):
+            os.mkdir(self.data_structures_folder)
         json_files = [
             pos_json.replace(".json", "")
             for pos_json in os.listdir(self.data_structures_folder)
@@ -280,7 +290,11 @@ class AiqTest(TestCase):
                 % (http_verb, http_code, self.structure.name_file, ex)
             )
 
-        j = r.json()
+        try:
+            j = r.json()
+        except:
+            return r
+
         if (responseValidator.schema and not responseValidator.validate(j)) or (
             contentValidator.schema and not contentValidator.validate(payload)
         ):
@@ -300,7 +314,6 @@ class AiqTest(TestCase):
         )
 
     def clearTest(self):
-        self.redis.flushdb()
         os.system(os.getenv(AIQDOCTESTS_CMD_TEARDOWN))
 
     def tearDown(self):
