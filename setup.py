@@ -28,4 +28,3 @@ setup(
         "Topic :: Text Editors :: Documentation",
     ],
 )
-)

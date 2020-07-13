@@ -307,8 +307,6 @@ class AiqTest(TestCase):
 
     def tearDown(self):
         super().tearDown()
-        try:
-            if self.http_verb() != "get":
-                self.clearTest()
+        self.clearTest()
         except:
             self.clearTest()
