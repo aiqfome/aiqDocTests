@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="aiqDocTests",
-    version="1.4.0",
+    version="1.5.0",
     author="An Awesome Coder",
     author_email="dev@aiqfome.com",
     scripts=["scripts/aiqdoctests"],
