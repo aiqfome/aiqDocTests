@@ -32,7 +32,9 @@ parser.add_argument(
 parser.add_argument(
     "-w",
     "--wait",
-    help="Wait for all services up before start tests \n For more information https://github.com/ufoscout/docker-compose-wait/ \n just set WAIT_HOSTS in environment",
+    dest="wait",
+    action="store_true",
+    help="Wait for all services up before start tests \n For more information https://github.com/ufoscout/docker-compose-wait/ \n Set WAIT_HOSTS in environment",
 )
 
 parser.add_argument(
