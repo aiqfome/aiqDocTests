@@ -32,9 +32,7 @@ parser.add_argument(
 parser.add_argument(
     "-w",
     "--wait",
-    help="Wait for all services up before start tests \n For more information https://github.com/ufoscout/docker-compose-wait/",
-    dest="wait",
-    action="store_true",
+    help="Wait for all services up before start tests \n For more information https://github.com/ufoscout/docker-compose-wait/ \n just set WAIT_HOSTS in environment",
 )
 
 parser.add_argument(
@@ -63,7 +61,7 @@ if args.init:
     config.generateSwagger()
 
 if args.tests:
-    ret = config.runTestsDocker(args.wait)
+    ret = config.runTestsDocker()
     if ret == 0:
         if args.generateDoc:
             config.generateSwagger()

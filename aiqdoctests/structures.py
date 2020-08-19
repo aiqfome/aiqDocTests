@@ -171,6 +171,12 @@ class Config:
         os.environ[AIQDOCTESTS_DATA_FOLDER] = self.data_structures_folder
         os.environ[AIQDOCTESTS_CMD_TEARDOWN] = self.tests_between_cmd
 
+        os.environ["WAIT_HOSTS_TIMEOUT"] = os.getenv("WAIT_HOSTS_TIMEOUT", "300")
+        os.environ["WAIT_SLEEP_INTERVAL"] = os.getenv("WAIT_SLEEP_INTERVAL", "5")
+        os.environ["WAIT_HOST_CONNECT_TIMEOUT"] = os.getenv(
+            "WAIT_HOST_CONNECT_TIMEOUT", "30"
+        )
+
     def importConfig(self, file):
         if not file:
             raise Exception("File is Null, impossible import")
@@ -185,9 +191,9 @@ class Config:
 
         return json.loads(json_scructure)
 
-    def runTestsDocker(self, wait=False):
+    def runTestsDocker(self):
         cmd = "sh -c "
-        if wait:
+        if os.getenv("WAIT_HOSTS", None):
             copyfile(
                 os.path.join(
                     os.path.dirname(sys.modules["aiqdoctests"].__file__), "wait"
