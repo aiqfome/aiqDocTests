@@ -5,7 +5,7 @@ import sys
 from cerberus import Validator
 import requests
 from http import HTTPStatus
-from unittest import TestCase
+from unittest import TestCase, util
 from shutil import copyfile
 import unittest
 
@@ -353,3 +353,22 @@ class AiqTest(TestCase):
     def tearDown(self):
         super().tearDown()
         self.clearTest()
+
+    class SetStructure:
+        def __init__(self, file):
+            if file is None:
+                raise Exception("File not informed!")
+            self.file = file
+
+        def __call__(self, Cls):
+            file = self.file
+
+            class NewCls(Cls):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.setStructure(file)
+
+                def __str__(self):
+                    return "%s (%s)" % (self._testMethodName, util.strclass(Cls))
+
+            return NewCls
